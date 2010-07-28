@@ -103,7 +103,7 @@
 		}
 	}
 	
-	NSDictionary *fileInfo = [NSDictionary dictionaryWithObjectsAndKeys:data, @"data", contentType, @"contentType", fileName, @"fileName", nil];
+	NSDictionary *fileInfo = [NSDictionary dictionaryWithObjectsAndKeys:data, @"data", contentType, @"contentType", fileName, @"fileName", @"attachment", @"contentDisposition", nil];
 	[[self fileData] setObject:fileInfo forKey:key];
 }
 
@@ -112,7 +112,7 @@
 	[self setData:data withFileName:@"file" andContentType:nil forKey:key];
 }
 
-- (void)setData:(id)data withFileName:(NSString *)fileName andContentType:(NSString *)contentType forKey:(NSString *)key
+- (void)setData:(id)data withFileName:(NSString *)fileName andContentType:(NSString *)contentType forKey:(NSString *)key contentDisposition:(NSString *)contentDisposition
 {
 	if (![self fileData]) {
 		[self setFileData:[NSMutableDictionary dictionary]];
@@ -121,8 +121,15 @@
 		contentType = @"application/octet-stream";
 	}
 	
-	NSDictionary *fileInfo = [NSDictionary dictionaryWithObjectsAndKeys:data, @"data", contentType, @"contentType", fileName, @"fileName", nil];
+	NSDictionary *fileInfo = [NSDictionary dictionaryWithObjectsAndKeys:data, @"data", contentType, @"contentType", fileName, @"fileName", contentDisposition, @"contentDisposition", nil];
 	[[self fileData] setObject:fileInfo forKey:key];
+}
+
+- (void)setData:(id)data withFileName:(NSString *)fileName andContentType:(NSString *)contentType forKey:(NSString *)key
+{
+    
+    [self setData:data withFileName:fileName andContentType:contentType forKey:key contentDisposition:@"form-data"];
+    
 }
 
 - (void)buildPostBody
@@ -198,9 +205,10 @@
 		id file = [fileInfo objectForKey:@"data"];
 		NSString *contentType = [fileInfo objectForKey:@"contentType"];
 		NSString *fileName = [fileInfo objectForKey:@"fileName"];
+		NSString *contentDisp = [fileInfo objectForKey:@"contentDisposition"];
 		
-		[self appendPostString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", key, fileName]];
-		[self appendPostString:[NSString stringWithFormat:@"Content-Type: %@; charset=%@\r\n\r\n", contentType, charset]];
+		[self appendPostString:[NSString stringWithFormat:@"Content-Disposition: %@; name=\"%@\"; filename=\"%@\"\r\n", contentDisp, key, fileName]];
+		[self appendPostString:[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", contentType]];
 		
 		if ([file isKindOfClass:[NSString class]]) {
 			[self appendPostDataFromFile:file];
