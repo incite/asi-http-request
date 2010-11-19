@@ -13,6 +13,7 @@
 #import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE
 	#import <CFNetwork/CFNetwork.h>
+	#import <UIKit/UIKit.h>
 #endif
 
 #import <stdio.h>
