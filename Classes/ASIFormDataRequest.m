@@ -253,7 +253,7 @@
 	i=0;
 	for (NSDictionary *val in [self fileData]) {
 
-		[self appendPostString:[NSString stringWithFormat:@"Content-Disposition: @%; name=\"%@\"; filename=\"%@\"\r\n", [val objectForKey:@"contentDisposition"], [val objectForKey:@"key"], [val objectForKey:@"fileName"]]];
+		[self appendPostString:[NSString stringWithFormat:@"Content-Disposition: %@; name=\"%@\"; filename=\"%@\"\r\n", [val objectForKey:@"contentDisposition"], [val objectForKey:@"key"], [val objectForKey:@"fileName"]]];
 		[self appendPostString:[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", [val objectForKey:@"contentType"]]];
 		
 		id data = [val objectForKey:@"data"];
